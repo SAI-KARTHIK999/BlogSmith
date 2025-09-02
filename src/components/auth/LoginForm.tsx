@@ -72,7 +72,7 @@ export function LoginForm() {
               <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
             )}
           </div>
-          <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 btn-glow" disabled={isPending}>
+          <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={isPending}>
             {isPending ? 'Signing In...' : 'Sign In'}
           </Button>
         </form>

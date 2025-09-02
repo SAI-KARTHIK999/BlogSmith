@@ -17,8 +17,8 @@ export default function LandingPage() {
           Where Ideas Meet the Smith’s Hammer
         </p>
         <div className="mt-8">
-          <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90 btn-glow">
-            <Link href="/signup">Get Started for Free</Link>
+          <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Link href="/signup">Get Started</Link>
           </Button>
         </div>
       </div>

@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 240 10% 4%;
+    --background: 47 18% 97%;
     --foreground: 210 40% 98%;
     --card: 240 10% 8%;
     --card-foreground: 210 40% 98%;
@@ -27,25 +27,25 @@
   }
 
   .dark {
-    --background: 240 10% 4%;
-    --foreground: 210 40% 98%;
-    --card: 240 10% 8%;
+    --background: 222 84% 5%; /* Deep space blue */
+    --foreground: 210 40% 98%; /* Light grey/white */
+    --card: 222 84% 8%; /* Slightly lighter space blue */
     --card-foreground: 210 40% 98%;
-    --popover: 240 10% 4%;
+    --popover: 222 84% 5%;
     --popover-foreground: 210 40% 98%;
-    --primary: 190 95% 60%;
-    --primary-foreground: 240 10% 4%;
-    --secondary: 240 10% 15%;
+    --primary: 260 90% 70%; /* Neon Purple */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 222 84% 12%; /* Darker space blue */
     --secondary-foreground: 210 40% 98%;
-    --muted: 240 10% 15%;
-    --muted-foreground: 210 40% 70%;
-    --accent: 300 90% 65%;
-    --accent-foreground: 240 10% 4%;
+    --muted: 222 84% 12%;
+    --muted-foreground: 210 40% 60%; /* Dimmed white */
+    --accent: 190 95% 60%; /* Neon Cyan/Blue */
+    --accent-foreground: 222 84% 5%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 240 10% 15%;
-    --input: 240 10% 15%;
-    --ring: 190 95% 60%;
+    --border: 222 84% 15%; /* Border with a hint of blue */
+    --input: 222 84% 12%;
+    --ring: 190 95% 60%; /* Ring color matches accent */
   }
 }
 
