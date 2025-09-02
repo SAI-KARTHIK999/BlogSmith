@@ -3,7 +3,12 @@ import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen text-center p-4 bg-background">
+    <main
+      className="flex flex-col items-center justify-center min-h-screen text-center p-4 bg-background"
+      style={{
+        background: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--accent) / 0.3), transparent), radial-gradient(ellipse 80% 50% at 50% 120%, hsl(var(--primary) / 0.3), transparent), hsl(var(--background))'
+      }}
+    >
       <div className="flex flex-col items-center">
         <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-glow">
           BlogSmith
