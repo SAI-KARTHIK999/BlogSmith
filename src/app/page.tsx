@@ -10,7 +10,7 @@ export default function LandingPage() {
       }}
     >
       <div className="flex flex-col items-center">
-        <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-glow">
+        <h1 className="text-4xl font-headline font-extrabold tracking-tight md:text-6xl text-glow">
           BlogSmith
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/90 font-tagline">
