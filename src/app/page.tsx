@@ -1,27 +1,14 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
   return (
-    <main className="relative flex flex-col items-center justify-center min-h-screen text-center text-white p-4">
-      <div className="absolute inset-0 w-full h-full">
-        <Image
-          src="https://picsum.photos/1920/1080"
-          alt="Neon abstract background"
-          data-ai-hint="neon abstract"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/60" />
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center">
+    <main className="flex flex-col items-center justify-center min-h-screen text-center p-4 bg-background">
+      <div className="flex flex-col items-center">
         <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-glow">
           BlogSmith
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-white/90">
+        <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/90">
           Where Ideas Meet the Smith’s Hammer
         </p>
         <div className="mt-8">
