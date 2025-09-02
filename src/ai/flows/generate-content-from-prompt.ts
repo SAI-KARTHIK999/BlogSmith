@@ -25,7 +25,8 @@ const GenerateContentFromPromptOutputSchema = z.object({
 export type GenerateContentFromPromptOutput = z.infer<typeof GenerateContentFromPromptOutputSchema>;
 
 export async function generateContentFromPrompt(input: GenerateContentFromPromptInput): Promise<GenerateContentFromPromptOutput> {
-  return generateContentFromPromptFlow(input);
+  const result = await generateContentFromPromptFlow(input);
+  return result;
 }
 
 const prompt = ai.definePrompt({
@@ -37,9 +38,7 @@ const prompt = ai.definePrompt({
 Content Type: {{{contentType}}}
 Length: {{{length}}}
 Tone: {{{tone}}}
-Prompt: {{{prompt}}}
-
-Generated Content:`, // No Handlebars logic.
+Prompt: {{{prompt}}}`,
 });
 
 const generateContentFromPromptFlow = ai.defineFlow(
@@ -50,6 +49,9 @@ const generateContentFromPromptFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('Content generation failed.');
+    }
+    return output;
   }
 );
