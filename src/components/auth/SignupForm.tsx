@@ -8,8 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { useState, useTransition } from 'react';
-import { signupAction } from '@/app/actions';
+import { useTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 const signupSchema = z.object({
@@ -34,9 +33,8 @@ export function SignupForm() {
 
   const onSubmit = (data: SignupFormValues) => {
     startTransition(async () => {
-      const result = await signupAction(data);
-      if (result.success && result.data) {
-        signup(result.data.email);
+      const result = await signup(data.email, data.password);
+      if (result.success) {
         toast({
           title: "Account Created",
           description: "You have been successfully signed up.",

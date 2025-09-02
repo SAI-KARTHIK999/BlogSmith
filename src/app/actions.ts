@@ -6,7 +6,11 @@ import {
 } from '@/ai/flows/generate-content-from-prompt';
 import { GeneratedContent } from '@/lib/types';
 import { z } from 'zod';
-import { getDb } from '@/lib/mongodb';
+
+// Note: We are not using Firebase Admin SDK here for simplicity.
+// In a real production app, you would use the Admin SDK for server-side actions
+// to ensure security and proper access control.
+// The client-side SDK usage here is for demonstration purposes.
 
 const contentGeneratorSchema = z.object({
   contentType: z.enum(['blog', 'tweet', 'email', 'ad copy']),
@@ -31,77 +35,28 @@ export async function generateContentAction(input: GenerateContentFromPromptInpu
   }
 }
 
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-});
+// The login and signup actions are now handled on the client-side by useAuth.ts
+// We keep these placeholders to show where you'd put server-side validation
+// if you weren't using the client-side Firebase SDK for auth.
 
-export async function loginAction(values: z.infer<typeof loginSchema>) {
-  const validatedFields = loginSchema.safeParse(values);
-  if (!validatedFields.success) {
-    return { success: false, error: "Invalid fields!" };
-  }
-  const { email, password } = validatedFields.data;
-
-  try {
-    const db = await getDb();
-    const user = await db.collection('users').findOne({ email });
-
-    if (!user) {
-      return { success: false, error: "Invalid email or password" };
-    }
-    
-    // In a real app, you would compare hashed passwords.
-    // For this demo, we'll just check if the password matches.
-    if (user.password !== password) {
-       return { success: false, error: "Invalid email or password" };
-    }
-
-    return { success: true, data: { email: user.email } };
-
-  } catch (error) {
-    console.error("Login error:", error);
-    return { success: false, error: "Something went wrong. Please try again." };
-  }
+export async function loginAction(values: any) {
+  // This action is now effectively handled on the client side with Firebase Auth.
+  // You could add server-side validation or logging here if needed.
+  return { success: true, message: "Client-side login process initiated." };
 }
 
-
-const signupSchema = z.object({
-  email: z.string().email({ message: 'Email is required' }),
-  password: z.string().min(8, { message: 'Minimum 8 characters required' }),
-});
-
-export async function signupAction(values: z.infer<typeof signupSchema>) {
-  const validatedFields = signupSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { success: false, error: "Invalid fields!" };
-  }
-
-  const { email, password } = validatedFields.data;
-
-  try {
-    const db = await getDb();
-    const existingUser = await db.collection('users').findOne({ email });
-
-    if (existingUser) {
-      return { success: false, error: "Email already in use!" };
-    }
-
-    // In a real app, you should hash the password before saving it.
-    await db.collection('users').insertOne({ email, password });
-
-    return { success: true, data: { email } };
-  } catch (error) {
-    console.error("Signup error:", error);
-    return { success: false, error: "Something went wrong. Please try again." };
-  }
+export async function signupAction(values: any) {
+  // This action is now effectively handled on the client side with Firebase Auth.
+  // You could add server-side validation or logging here if needed.
+  return { success: true, message: "Client-side signup process initiated." };
 }
 
 export async function saveContentHistoryAction(content: GeneratedContent, email: string) {
   try {
-    const db = await getDb();
-    await db.collection('contentHistory').insertOne({ ...content, userEmail: email });
+    // This would ideally use the Firebase Admin SDK to save data securely.
+    // For this demo, we'll let the client write directly to Firestore,
+    // which requires appropriate security rules in the Firebase Console.
+    // Example: firestore.collection(`users/${userId}/contentHistory`).add(content);
     return { success: true };
   } catch (error) {
     console.error('Failed to save content history:', error);
@@ -110,18 +65,11 @@ export async function saveContentHistoryAction(content: GeneratedContent, email:
 }
 
 export async function getContentHistoryAction(email: string): Promise<{ success: boolean; data?: GeneratedContent[]; error?: string; }> {
-  try {
-    const db = await getDb();
-    const history = await db.collection('contentHistory').find({ userEmail: email }).sort({ timestamp: -1 }).toArray();
-    
-    // The data from MongoDB includes _id, which is not serializable for client components.
-    // We map it to a serializable format.
-    const serializableHistory = history.map(item => ({
-      ...item,
-      _id: item._id.toString(),
-    })) as unknown as GeneratedContent[];
-
-    return { success: true, data: serializableHistory };
+   try {
+    // This would ideally use the Firebase Admin SDK to get data securely.
+    // For this demo, we'll let the client read directly from Firestore,
+    // which requires appropriate security rules.
+    return { success: true, data: [] }; // Data fetching is now on the client.
   } catch (error) {
     console.error('Failed to get content history:', error);
     return { success: false, error: 'Could not retrieve history.' };
@@ -130,9 +78,8 @@ export async function getContentHistoryAction(email: string): Promise<{ success:
 
 export async function deleteContentHistoryAction(id: string, email: string) {
     try {
-        const db = await getDb();
-        const { ObjectId } = await import('mongodb');
-        await db.collection('contentHistory').deleteOne({ _id: new ObjectId(id), userEmail: email });
+        // This would ideally use the Firebase Admin SDK to delete data securely.
+        // For this demo, client handles deletion.
         return { success: true };
     } catch (error) {
         console.error('Failed to delete content history:', error);

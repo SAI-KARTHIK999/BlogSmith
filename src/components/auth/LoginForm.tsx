@@ -8,8 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { useState, useTransition } from 'react';
-import { loginAction } from '@/app/actions';
+import { useTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -35,9 +34,8 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginFormValues) => {
     startTransition(async () => {
-      const result = await loginAction(data);
-      if (result.success && result.data) {
-        login(result.data.email);
+      const result = await login(data.email, data.password);
+      if (result.success) {
          toast({
           title: "Login Successful",
           description: "Welcome back!",

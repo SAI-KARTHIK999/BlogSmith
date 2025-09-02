@@ -1,49 +1,69 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  User as FirebaseUser,
+} from 'firebase/auth';
+import { app } from '@/lib/firebase';
 
 interface User {
   email: string;
+  uid: string;
 }
 
 export function useAuth() {
+  const auth = getAuth(app);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    try {
-      const userJson = localStorage.getItem('user');
-      if (userJson) {
-        setUser(JSON.parse(userJson));
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+      if (firebaseUser && firebaseUser.email) {
+        setUser({ email: firebaseUser.email, uid: firebaseUser.uid });
+      } else {
+        setUser(null);
       }
-    } catch (e) {
-      console.error("Failed to parse user from localStorage", e);
-      localStorage.removeItem('user');
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  const login = useCallback(async (email: string, password: string):Promise<{success: boolean, error?: string}> => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push('/dashboard');
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
     }
-    setLoading(false);
-  }, []);
+  }, [auth, router]);
 
-  const login = useCallback((email: string) => {
-    const userData = { email };
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    router.push('/dashboard');
-  }, [router]);
+  const signup = useCallback(async (email: string, password: string): Promise<{success: boolean, error?: string}> => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push('/dashboard');
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  }, [auth, router]);
 
-  const signup = useCallback((email: string) => {
-    const userData = { email };
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    router.push('/dashboard');
-  }, [router]);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem('user');
-    setUser(null);
-    router.push('/login');
-  }, [router]);
+  const logout = useCallback(async () => {
+    try {
+      await signOut(auth);
+      router.push('/login');
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  }, [auth, router]);
 
   useEffect(() => {
     if (!loading) {
