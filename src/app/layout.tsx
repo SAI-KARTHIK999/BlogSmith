@@ -3,8 +3,8 @@ import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'IdeaForge',
-  description: 'Forging Raw Ideas into Polished Prose.',
+  title: 'BlogSmith',
+  description: 'Where Ideas Meet the Smith’s Hammer',
 };
 
 export default function RootLayout({
