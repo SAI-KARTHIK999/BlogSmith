@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Sparkles } from 'lucide-react';
 
 export default function LandingPage() {
   return (
@@ -19,12 +18,6 @@ export default function LandingPage() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center">
-        <div className="mb-6 flex justify-center">
-            <div className="rounded-full bg-white/20 px-4 py-1 text-sm font-medium text-white flex items-center gap-2 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4" />
-              <span>Powered by Generative AI</span>
-            </div>
-        </div>
         <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-shadow-lg">
           Unleash Your Creativity with AI
         </h1>
