@@ -3,8 +3,8 @@ import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'ContentCraft AI',
-  description: 'Generate high-quality content with AI assistance.',
+  title: 'IdeaForge',
+  description: 'Forging Raw Ideas into Polished Prose.',
 };
 
 export default function RootLayout({

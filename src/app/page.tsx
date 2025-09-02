@@ -19,10 +19,10 @@ export default function LandingPage() {
 
       <div className="relative z-10 flex flex-col items-center">
         <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-shadow-lg">
-          Unleash Your Creativity with AI
+          IdeaForge
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-white/90 text-shadow">
-          Say goodbye to writer's block. ContentCraft AI helps you generate high-quality blogs, emails, and ad copy in seconds.
+          Forging Raw Ideas into Polished Prose.
         </p>
         <div className="mt-8">
           <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90">

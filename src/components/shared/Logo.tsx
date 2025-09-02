@@ -8,7 +8,7 @@ export function Logo() {
         <Sparkles className="h-5 w-5 text-primary-foreground" />
       </div>
       <span className="text-xl font-headline font-bold text-foreground">
-        ContentCraft AI
+        IdeaForge
       </span>
     </Link>
   );
