@@ -27,25 +27,25 @@
   }
 
   .dark {
-    --background: 222 84% 5%; /* Deep space blue */
-    --foreground: 210 40% 98%; /* Light grey/white */
-    --card: 222 84% 8%; /* Slightly lighter space blue */
+    --background: 220 40% 5%; /* Deep dark blue from space */
+    --foreground: 210 40% 98%; /* Light grey/white for stars */
+    --card: 220 30% 8%; /* Slightly lighter dark blue */
     --card-foreground: 210 40% 98%;
-    --popover: 222 84% 5%;
+    --popover: 220 40% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 260 90% 70%; /* Neon Purple */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 222 84% 12%; /* Darker space blue */
+    --primary: 205 80% 60%; /* Bright blue from the nebula */
+    --primary-foreground: 220 40% 5%;
+    --secondary: 220 20% 12%; /* Darker blue */
     --secondary-foreground: 210 40% 98%;
-    --muted: 222 84% 12%;
+    --muted: 220 20% 12%;
     --muted-foreground: 210 40% 60%; /* Dimmed white */
-    --accent: 190 95% 60%; /* Neon Cyan/Blue */
-    --accent-foreground: 222 84% 5%;
+    --accent: 25 95% 55%; /* Fiery orange from the nebula */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 222 84% 15%; /* Border with a hint of blue */
-    --input: 222 84% 12%;
-    --ring: 190 95% 60%; /* Ring color matches accent */
+    --border: 220 20% 15%; /* Border with a hint of blue */
+    --input: 220 20% 12%;
+    --ring: 205 80% 60%; /* Ring color matches primary */
   }
 }
 

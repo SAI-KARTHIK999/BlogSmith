@@ -6,7 +6,7 @@ export default function LandingPage() {
     <main
       className="flex flex-col items-center justify-center min-h-screen text-center p-4 bg-background"
       style={{
-        background: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--accent) / 0.3), transparent), radial-gradient(ellipse 80% 50% at 50% 120%, hsl(var(--primary) / 0.3), transparent), hsl(var(--background))'
+        background: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.3), transparent), radial-gradient(ellipse 80% 50% at 50% 120%, hsl(var(--accent) / 0.3), transparent), hsl(var(--background))'
       }}
     >
       <div className="flex flex-col items-center">
@@ -17,7 +17,7 @@ export default function LandingPage() {
           Where Ideas Meet the Smith’s Hammer
         </p>
         <div className="mt-8">
-          <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90 btn-glow">
+          <Button size="lg" asChild className="bg-primary text-primary-foreground hover:bg-primary/90 btn-glow">
             <Link href="/signup">Get Started</Link>
           </Button>
         </div>
