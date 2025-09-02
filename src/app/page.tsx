@@ -8,24 +8,24 @@ export default function LandingPage() {
       <div className="absolute inset-0 w-full h-full">
         <Image
           src="https://picsum.photos/1920/1080"
-          alt="Abstract background"
-          data-ai-hint="abstract gradient"
+          alt="Neon abstract background"
+          data-ai-hint="neon abstract"
           fill
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center">
-        <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-shadow-lg">
+        <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-glow">
           BlogSmith
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-white/90 text-shadow">
+        <p className="mx-auto mt-6 max-w-2xl text-lg text-white/90">
           Where Ideas Meet the Smith’s Hammer
         </p>
         <div className="mt-8">
-          <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+          <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90 btn-glow">
             <Link href="/signup">Get Started for Free</Link>
           </Button>
         </div>

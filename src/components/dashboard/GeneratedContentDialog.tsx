@@ -51,7 +51,7 @@ export default function GeneratedContentDialog({
             <Button variant="secondary" onClick={handleCopy}>
               <Copy className="mr-2 h-4 w-4" /> Copy
             </Button>
-            <Button onClick={() => onSave(content)} className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button onClick={() => onSave(content)} className="bg-accent text-accent-foreground hover:bg-accent/90 btn-glow">
               <Save className="mr-2 h-4 w-4" /> Save to History
             </Button>
           </div>

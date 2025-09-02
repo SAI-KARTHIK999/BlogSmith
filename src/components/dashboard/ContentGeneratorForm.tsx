@@ -123,7 +123,7 @@ export default function ContentGeneratorForm({ onContentGenerated }: ContentGene
             {form.formState.errors.prompt && <p className="text-sm text-destructive">{form.formState.errors.prompt.message}</p>}
           </div>
 
-          <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={isSubmitting}>
+          <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 btn-glow" disabled={isSubmitting}>
             {isSubmitting ? (
               'Generating...'
             ) : (
