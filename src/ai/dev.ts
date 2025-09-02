@@ -1,4 +1,4 @@
-import { config } from 'dotenv';
-config();
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-import '@/ai/flows/generate-content-from-prompt.ts';
+import './flows/generate-content-from-prompt';

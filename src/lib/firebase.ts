@@ -8,7 +8,7 @@ const firebaseConfig = {
   storageBucket: 'contentcraft-ai-ff91p.firebasestorage.app',
   apiKey: 'AIzaSyBqwzybJCjzpmC0MnJc-edVcF-2G25AAFs',
   authDomain: 'contentcraft-ai-ff91p.firebaseapp.com',
-  measurementId: '',
+  measurementId: 'G-EMM0G135P9',
   messagingSenderId: '986273953801',
 };
 
