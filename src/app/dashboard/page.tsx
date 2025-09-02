@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import ContentGeneratorForm from '@/components/dashboard/ContentGeneratorForm';
 import ContentHistory from '@/components/dashboard/ContentHistory';
@@ -8,7 +8,26 @@ import { type GeneratedContent } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, query, where, onSnapshot, orderBy, serverTimestamp, deleteDoc, doc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  query,
+  onSnapshot,
+  orderBy,
+  serverTimestamp,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
@@ -17,6 +36,7 @@ export default function DashboardPage() {
   const [history, setHistory] = useState<GeneratedContent[]>([]);
   const [newlyGenerated, setNewlyGenerated] = useState<GeneratedContent | null>(null);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -26,27 +46,33 @@ export default function DashboardPage() {
         orderBy('timestamp', 'desc')
       );
 
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const historyData: GeneratedContent[] = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          historyData.push({
-            id: doc.id,
-            ...data,
-            timestamp: data.timestamp?.toMillis() || Date.now(),
-          } as GeneratedContent);
-        });
-        setHistory(historyData);
-        setIsHistoryLoading(false);
-      }, (error) => {
-        console.error("Error fetching history:", error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Could not load content history.",
-        });
-        setIsHistoryLoading(false);
-      });
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          const historyData: GeneratedContent[] = [];
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              historyData.push({
+                id: doc.id,
+                ...data,
+                timestamp: data.timestamp?.toMillis() || Date.now(),
+              } as GeneratedContent);
+            });
+          }
+          setHistory(historyData);
+          setIsHistoryLoading(false);
+        },
+        (error) => {
+          console.error('Error fetching history:', error);
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Could not load content history.',
+          });
+          setIsHistoryLoading(false);
+        }
+      );
 
       return () => unsubscribe();
     } else if (!loading) {
@@ -55,8 +81,9 @@ export default function DashboardPage() {
     }
   }, [user, loading, toast]);
 
-
-  const handleContentGenerated = (content: Omit<GeneratedContent, 'id' | 'timestamp'>) => {
+  const handleContentGenerated = (
+    content: Omit<GeneratedContent, 'id' | 'timestamp'>
+  ) => {
     const newContent: GeneratedContent = {
       ...content,
       id: `temp_${Date.now()}`, // Temporary ID
@@ -67,7 +94,7 @@ export default function DashboardPage() {
 
   const handleSaveContent = async (content: GeneratedContent) => {
     if (!user) return;
-    
+
     try {
       const { id, ...contentToSave } = content; // remove temp id
       await addDoc(collection(db, `users/${user.uid}/contentHistory`), {
@@ -80,30 +107,37 @@ export default function DashboardPage() {
         description: 'Your new content has been added to your history.',
       });
     } catch (error) {
-       toast({
+      toast({
         variant: 'destructive',
         title: 'Save Failed',
         description: 'Could not save content to history.',
       });
     }
   };
-  
-  const handleDeleteContent = async (id: string) => {
-    if (!user) return;
+
+  const handleDeleteContent = (id: string) => {
+    setItemToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!user || !itemToDelete) return;
 
     try {
-      await deleteDoc(doc(db, `users/${user.uid}/contentHistory`, id));
+      await deleteDoc(doc(db, `users/${user.uid}/contentHistory`, itemToDelete));
       toast({
-        variant: "destructive",
+        variant: 'destructive',
         title: 'Content Deleted',
-        description: 'The selected content has been removed from your history.',
+        description:
+          'The selected content has been removed from your history.',
       });
     } catch (error) {
-       toast({
+      toast({
         variant: 'destructive',
         title: 'Delete Failed',
         description: 'Could not delete content.',
       });
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -135,10 +169,10 @@ export default function DashboardPage() {
           <ContentGeneratorForm onContentGenerated={handleContentGenerated} />
         </aside>
         <section className="lg:col-span-8">
-          <ContentHistory 
-            history={history} 
-            onDelete={handleDeleteContent} 
-            isLoading={isHistoryLoading} 
+          <ContentHistory
+            history={history}
+            onDelete={handleDeleteContent}
+            isLoading={isHistoryLoading}
           />
         </section>
       </div>
@@ -150,6 +184,25 @@ export default function DashboardPage() {
           onClose={() => setNewlyGenerated(null)}
         />
       )}
+      <AlertDialog open={!!itemToDelete} onOpenChange={() => setItemToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the content from your history.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
