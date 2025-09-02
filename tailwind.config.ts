@@ -19,6 +19,7 @@ export default {
       fontFamily: {
         body: ['PT Sans', 'sans-serif'],
         headline: ['Poppins', 'sans-serif'],
+        tagline: ['Inconsolata', 'monospace'],
         code: ['monospace'],
       },
       colors: {

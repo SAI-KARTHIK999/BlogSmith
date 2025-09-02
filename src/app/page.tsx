@@ -13,7 +13,7 @@ export default function LandingPage() {
         <h1 className="text-4xl font-headline font-bold tracking-tight md:text-6xl text-glow">
           BlogSmith
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/90">
+        <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/90 font-tagline">
           Where Ideas Meet the Smith’s Hammer
         </p>
         <div className="mt-8">
