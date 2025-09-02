@@ -1,12 +1,13 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import ContentGeneratorForm from '@/components/dashboard/ContentGeneratorForm';
 import ContentHistory from '@/components/dashboard/ContentHistory';
 import GeneratedContentDialog from '@/components/dashboard/GeneratedContentDialog';
-import { type GeneratedContent, type ContentType } from '@/lib/types';
+import { type GeneratedContent } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getContentHistoryAction, saveContentHistoryAction, deleteContentHistoryAction } from '@/app/actions';
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
@@ -15,59 +16,80 @@ export default function DashboardPage() {
   const [history, setHistory] = useState<GeneratedContent[]>([]);
   const [newlyGenerated, setNewlyGenerated] = useState<GeneratedContent | null>(null);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+
+  const fetchHistory = useCallback(async () => {
+    if (user) {
+      setIsHistoryLoading(true);
+      const result = await getContentHistoryAction(user.email);
+      if (result.success && result.data) {
+        setHistory(result.data);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not load content history.",
+        });
+      }
+      setIsHistoryLoading(false);
+    }
+  }, [user, toast]);
   
   useEffect(() => {
     if (!loading && user) {
-      try {
-        const storedHistory = localStorage.getItem(`contentHistory_${user.email}`);
-        if (storedHistory) {
-          setHistory(JSON.parse(storedHistory));
-        }
-      } catch (e) {
-        console.error("Failed to load history from localStorage", e);
-      } finally {
-        setIsHistoryLoading(false);
-      }
+      fetchHistory();
     } else if (!loading && !user) {
       setIsHistoryLoading(false);
     }
-  }, [user, loading]);
+  }, [user, loading, fetchHistory]);
 
-  const updateLocalStorage = (newHistory: GeneratedContent[]) => {
-    if (user) {
-      localStorage.setItem(`contentHistory_${user.email}`, JSON.stringify(newHistory));
-    }
-  }
 
   const handleContentGenerated = (content: Omit<GeneratedContent, 'id' | 'timestamp'>) => {
     const newContent: GeneratedContent = {
       ...content,
-      id: `content_${Date.now()}`,
+      id: `content_${Date.now()}_${Math.random()}`,
       timestamp: Date.now(),
     };
     setNewlyGenerated(newContent);
   };
 
-  const handleSaveContent = (content: GeneratedContent) => {
-    const updatedHistory = [content, ...history];
-    setHistory(updatedHistory);
-    updateLocalStorage(updatedHistory);
-    setNewlyGenerated(null);
-    toast({
-      title: 'Content Saved!',
-      description: 'Your new content has been added to your history.',
-    });
+  const handleSaveContent = async (content: GeneratedContent) => {
+    if (!user) return;
+    
+    const result = await saveContentHistoryAction(content, user.email);
+    if (result.success) {
+      setHistory(prev => [content, ...prev]);
+      setNewlyGenerated(null);
+      toast({
+        title: 'Content Saved!',
+        description: 'Your new content has been added to your history.',
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Save Failed',
+        description: result.error || 'Could not save content to history.',
+      });
+    }
   };
   
-  const handleDeleteContent = (id: string) => {
-    const updatedHistory = history.filter((item) => item.id !== id);
-    setHistory(updatedHistory);
-    updateLocalStorage(updatedHistory);
-    toast({
-      variant: "destructive",
-      title: 'Content Deleted',
-      description: 'The selected content has been removed from your history.',
-    });
+  const handleDeleteContent = async (id: string) => {
+    if (!user) return;
+
+    const result = await deleteContentHistoryAction(id, user.email);
+    if (result.success) {
+      setHistory(prev => prev.filter((item) => item.id !== id));
+      toast({
+        variant: "destructive",
+        title: 'Content Deleted',
+        description: 'The selected content has been removed from your history.',
+      });
+    } else {
+       toast({
+        variant: 'destructive',
+        title: 'Delete Failed',
+        description: result.error || 'Could not delete content.',
+      });
+    }
   };
 
   if (loading) {
